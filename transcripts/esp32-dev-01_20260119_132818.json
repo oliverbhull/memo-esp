@@ -1,0 +1,9 @@
+{
+  "device_id": "esp32-dev-01",
+  "timestamp": "20260119_132818",
+  "duration_sec": 5.5,
+  "sample_rate": 16000,
+  "bits_per_sample": 16,
+  "channels": 1,
+  "transcript": "One, two, three, four, five, six, seven, eight, nine, belly."
+}

@@ -1,0 +1,9 @@
+{
+  "device_id": "esp32-dev-01",
+  "timestamp": "20260119_135441",
+  "duration_sec": 3.25,
+  "sample_rate": 16000,
+  "bits_per_sample": 16,
+  "channels": 1,
+  "transcript": "If it works, we'll get an effort handing it to the"
+}

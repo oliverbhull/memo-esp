@@ -1,0 +1,9 @@
+{
+  "device_id": "esp32-dev-01",
+  "timestamp": "20260119_122622_499664",
+  "duration_sec": 1.0,
+  "sample_rate": 16000,
+  "bits_per_sample": 16,
+  "channels": 1,
+  "transcript": "[BLANK_AUDIO]"
+}

@@ -1,0 +1,26 @@
+# PlatformIO
+.pio/
+.pioenvs/
+.piolibdeps/
+
+# Build artifacts
+*.o
+*.elf
+*.bin
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Audio data
+received_audio/
+*.pcm
+*.wav
+
+# Credentials (if moved to separate file)
+secrets.h
+credentials.h

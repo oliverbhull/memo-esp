@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESP32 Audio Transcription</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 16px;
+            color: #666;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ddd;
+        }
+
+        .status-indicator.recording {
+            background: #ef4444;
+            animation: pulse 2s infinite;
+        }
+
+        .status-indicator.idle {
+            background: #10b981;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .transcripts {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .transcript-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .transcript-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .transcript-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .transcript-time {
+            font-weight: 600;
+            color: #3b82f6;
+        }
+
+        .transcript-duration {
+            color: #8b5cf6;
+        }
+
+        .transcript-text {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .controls {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .controls-hint {
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>ESP32 Audio Transcription</h1>
+            <div class="status">
+                <div class="status-indicator" id="statusIndicator"></div>
+                <span id="statusText">Connecting...</span>
+            </div>
+        </header>
+
+        <div class="controls">
+            <div class="controls-hint">Press SPACE on the server terminal to start/stop recording</div>
+        </div>
+
+        <div class="transcripts" id="transcripts">
+            <div class="empty-state">
+                <div class="empty-state-icon">🎤</div>
+                <div>No transcripts yet. Start recording to see transcriptions appear here.</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const transcriptsContainer = document.getElementById('transcripts');
+        const statusIndicator = document.getElementById('statusIndicator');
+        const statusText = document.getElementById('statusText');
+
+        let transcripts = [];
+        let eventSource = null;
+
+        function formatTime(timestamp) {
+            const date = new Date(timestamp);
+            return date.toLocaleTimeString('en-US', {
+                hour: 'numeric',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+        }
+
+        function formatDate(timestamp) {
+            const date = new Date(timestamp);
+            return date.toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric'
+            });
+        }
+
+        function addTranscript(data) {
+            transcripts.unshift(data);
+            renderTranscripts();
+        }
+
+        function renderTranscripts() {
+            if (transcripts.length === 0) {
+                transcriptsContainer.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🎤</div>
+                        <div>No transcripts yet. Start recording to see transcriptions appear here.</div>
+                    </div>
+                `;
+                return;
+            }
+
+            transcriptsContainer.innerHTML = transcripts.map(t => `
+                <div class="transcript-card">
+                    <div class="transcript-header">
+                        <div class="transcript-meta">
+                            <span class="transcript-time">${formatTime(t.timestamp)}</span>
+                            <span>${formatDate(t.timestamp)}</span>
+                            <span class="transcript-duration">${t.duration_sec.toFixed(1)}s</span>
+                            <span>${t.device_id}</span>
+                        </div>
+                    </div>
+                    <div class="transcript-text">${t.transcript}</div>
+                </div>
+            `).join('');
+        }
+
+        function updateStatus(recording) {
+            if (recording) {
+                statusIndicator.className = 'status-indicator recording';
+                statusText.textContent = 'Recording...';
+            } else {
+                statusIndicator.className = 'status-indicator idle';
+                statusText.textContent = 'Ready';
+            }
+        }
+
+        function connectSSE() {
+            eventSource = new EventSource('/events');
+
+            eventSource.addEventListener('transcript', (e) => {
+                const data = JSON.parse(e.data);
+                addTranscript(data);
+            });
+
+            eventSource.addEventListener('status', (e) => {
+                const data = JSON.parse(e.data);
+                updateStatus(data.recording);
+            });
+
+            eventSource.onopen = () => {
+                console.log('SSE connection opened');
+                statusIndicator.className = 'status-indicator idle';
+                statusText.textContent = 'Connected';
+            };
+
+            eventSource.onerror = () => {
+                console.log('SSE connection error');
+                statusIndicator.className = 'status-indicator';
+                statusText.textContent = 'Disconnected';
+                eventSource.close();
+                setTimeout(connectSSE, 3000);
+            };
+        }
+
+        // Poll status periodically
+        function pollStatus() {
+            fetch('/status')
+                .then(r => r.json())
+                .then(data => {
+                    updateStatus(data.recording);
+                })
+                .catch(err => console.error('Status poll error:', err));
+        }
+
+        // Load existing transcripts
+        function loadTranscripts() {
+            fetch('/transcripts')
+                .then(r => r.json())
+                .then(data => {
+                    transcripts = data;
+                    renderTranscripts();
+                })
+                .catch(err => console.error('Load transcripts error:', err));
+        }
+
+        // Initialize
+        connectSSE();
+        loadTranscripts();
+        setInterval(pollStatus, 2000);
+    </script>
+</body>
+</html>

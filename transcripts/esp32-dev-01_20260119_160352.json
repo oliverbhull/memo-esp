@@ -1,0 +1,9 @@
+{
+  "device_id": "esp32-dev-01",
+  "timestamp": "20260119_160352",
+  "duration_sec": 11.0,
+  "sample_rate": 16000,
+  "bits_per_sample": 16,
+  "channels": 1,
+  "transcript": "Testing the audio here to make sure that it works today is Monday January 19th at 4 p.m."
+}

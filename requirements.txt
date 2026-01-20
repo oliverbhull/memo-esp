@@ -1,0 +1,8 @@
+# Option 1: faster-whisper (recommended - works with your .bin models)
+faster-whisper>=1.0.0
+
+# Option 2: openai-whisper (if you prefer the original)
+# openai-whisper>=20231117
+
+# Optional: for better performance
+# torch>=2.0.0

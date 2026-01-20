@@ -1,0 +1,1 @@
+We're gonna make the display a red LED when it is audio and recording
