@@ -1,3 +1,0 @@
-/Users/oliverhull/dev/memo-esp/target/debug/build/whisper-rs-sys-2609b97740339db1/out/lib/static/libwhisper.a
-/Users/oliverhull/dev/memo-esp/target/debug/build/whisper-rs-sys-2609b97740339db1/out/include/ggml.h
-/Users/oliverhull/dev/memo-esp/target/debug/build/whisper-rs-sys-2609b97740339db1/out/include/whisper.h
