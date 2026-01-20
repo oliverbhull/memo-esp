@@ -2,15 +2,15 @@
 #define CONFIG_H
 
 // WiFi Configuration
-#define WIFI_SSID "Founders Guest"
-#define WIFI_PASSWORD "artifact1!"
+#define WIFI_SSID "Boston2"
+#define WIFI_PASSWORD "larrybird"
 #define WIFI_TIMEOUT_MS 20000
 
 // Audio Configuration
-#define SAMPLE_RATE 16000
+#define SAMPLE_RATE 16000  // 16kHz is optimal for speech recognition
 #define BITS_PER_SAMPLE 16
 #define CHANNELS 1
-#define BUFFER_SIZE 512  // samples per buffer
+#define BUFFER_SIZE 1024  // Increased buffer size for better stability
 #define MAX_RECORDING_SEC 30  // Maximum recording duration in seconds
 
 // Button Configuration (XIAO ESP32-S3 has built-in button on D1/GPIO 1)
@@ -29,9 +29,9 @@
 #define LED_B_PIN 22    // Blue LED
 
 // HTTP Configuration
-#define SERVER_HOST "10.104.16.88"
+#define SERVER_HOST "192.168.12.118"
 #define SERVER_PORT "8000"
-#define SERVER_URL "http://10.104.16.88:8000/audio"
+#define SERVER_URL "http://192.168.12.118:8000/audio"
 #define DEVICE_ID "esp32-dev-01"
 
 // Debug

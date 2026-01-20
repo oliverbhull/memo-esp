@@ -1,0 +1,44 @@
+[
+{
+  "directory": "/Users/oliverhull/dev/memo-esp/target/release/build/whisper-rs-sys-721d0888d793c39d/out/build",
+  "command": "/usr/bin/cc -DACCELERATE_LAPACK_ILP64 -DACCELERATE_NEW_LAPACK -DGGML_METAL_EMBED_LIBRARY -DGGML_METAL_NDEBUG -DGGML_USE_ACCELERATE -DGGML_USE_METAL -D_DARWIN_C_SOURCE -D_XOPEN_SOURCE=600 -I/Users/oliverhull/dev/memo-esp/target/release/build/whisper-rs-sys-721d0888d793c39d/out/whisper.cpp/. -F/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks  -ffunction-sections -fdata-sections -fPIC --target=arm64-apple-macosx -mmacosx-version-min=26.1 -w -O3 -DNDEBUG -arch arm64 -o CMakeFiles/whisper.dir/ggml.c.o -c /Users/oliverhull/dev/memo-esp/target/release/build/whisper-rs-sys-721d0888d793c39d/out/whisper.cpp/ggml.c",
+  "file": "/Users/oliverhull/dev/memo-esp/target/release/build/whisper-rs-sys-721d0888d793c39d/out/whisper.cpp/ggml.c",
+  "output": "CMakeFiles/whisper.dir/ggml.c.o"
+},
+{
+  "directory": "/Users/oliverhull/dev/memo-esp/target/release/build/whisper-rs-sys-721d0888d793c39d/out/build",
+  "command": "/usr/bin/cc -DACCELERATE_LAPACK_ILP64 -DACCELERATE_NEW_LAPACK -DGGML_METAL_EMBED_LIBRARY -DGGML_METAL_NDEBUG -DGGML_USE_ACCELERATE -DGGML_USE_METAL -D_DARWIN_C_SOURCE -D_XOPEN_SOURCE=600 -I/Users/oliverhull/dev/memo-esp/target/release/build/whisper-rs-sys-721d0888d793c39d/out/whisper.cpp/. -F/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks  -ffunction-sections -fdata-sections -fPIC --target=arm64-apple-macosx -mmacosx-version-min=26.1 -w -O3 -DNDEBUG -arch arm64 -o CMakeFiles/whisper.dir/ggml-alloc.c.o -c /Users/oliverhull/dev/memo-esp/target/release/build/whisper-rs-sys-721d0888d793c39d/out/whisper.cpp/ggml-alloc.c",
+  "file": "/Users/oliverhull/dev/memo-esp/target/release/build/whisper-rs-sys-721d0888d793c39d/out/whisper.cpp/ggml-alloc.c",
+  "output": "CMakeFiles/whisper.dir/ggml-alloc.c.o"
+},
+{
+  "directory": "/Users/oliverhull/dev/memo-esp/target/release/build/whisper-rs-sys-721d0888d793c39d/out/build",
+  "command": "/usr/bin/cc -DACCELERATE_LAPACK_ILP64 -DACCELERATE_NEW_LAPACK -DGGML_METAL_EMBED_LIBRARY -DGGML_METAL_NDEBUG -DGGML_USE_ACCELERATE -DGGML_USE_METAL -D_DARWIN_C_SOURCE -D_XOPEN_SOURCE=600 -I/Users/oliverhull/dev/memo-esp/target/release/build/whisper-rs-sys-721d0888d793c39d/out/whisper.cpp/. -F/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks  -ffunction-sections -fdata-sections -fPIC --target=arm64-apple-macosx -mmacosx-version-min=26.1 -w -O3 -DNDEBUG -arch arm64 -o CMakeFiles/whisper.dir/ggml-backend.c.o -c /Users/oliverhull/dev/memo-esp/target/release/build/whisper-rs-sys-721d0888d793c39d/out/whisper.cpp/ggml-backend.c",
+  "file": "/Users/oliverhull/dev/memo-esp/target/release/build/whisper-rs-sys-721d0888d793c39d/out/whisper.cpp/ggml-backend.c",
+  "output": "CMakeFiles/whisper.dir/ggml-backend.c.o"
+},
+{
+  "directory": "/Users/oliverhull/dev/memo-esp/target/release/build/whisper-rs-sys-721d0888d793c39d/out/build",
+  "command": "/usr/bin/cc -DACCELERATE_LAPACK_ILP64 -DACCELERATE_NEW_LAPACK -DGGML_METAL_EMBED_LIBRARY -DGGML_METAL_NDEBUG -DGGML_USE_ACCELERATE -DGGML_USE_METAL -D_DARWIN_C_SOURCE -D_XOPEN_SOURCE=600 -I/Users/oliverhull/dev/memo-esp/target/release/build/whisper-rs-sys-721d0888d793c39d/out/whisper.cpp/. -F/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks  -ffunction-sections -fdata-sections -fPIC --target=arm64-apple-macosx -mmacosx-version-min=26.1 -w -O3 -DNDEBUG -arch arm64 -o CMakeFiles/whisper.dir/ggml-quants.c.o -c /Users/oliverhull/dev/memo-esp/target/release/build/whisper-rs-sys-721d0888d793c39d/out/whisper.cpp/ggml-quants.c",
+  "file": "/Users/oliverhull/dev/memo-esp/target/release/build/whisper-rs-sys-721d0888d793c39d/out/whisper.cpp/ggml-quants.c",
+  "output": "CMakeFiles/whisper.dir/ggml-quants.c.o"
+},
+{
+  "directory": "/Users/oliverhull/dev/memo-esp/target/release/build/whisper-rs-sys-721d0888d793c39d/out/build",
+  "command": "/usr/bin/cc -DACCELERATE_LAPACK_ILP64 -DACCELERATE_NEW_LAPACK -DGGML_METAL_EMBED_LIBRARY -DGGML_METAL_NDEBUG -DGGML_USE_ACCELERATE -DGGML_USE_METAL -D_DARWIN_C_SOURCE -D_XOPEN_SOURCE=600 -I/Users/oliverhull/dev/memo-esp/target/release/build/whisper-rs-sys-721d0888d793c39d/out/whisper.cpp/. -F/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks  -ffunction-sections -fdata-sections -fPIC --target=arm64-apple-macosx -mmacosx-version-min=26.1 -w -O3 -DNDEBUG -arch arm64 -o CMakeFiles/whisper.dir/ggml-metal.m.o -c /Users/oliverhull/dev/memo-esp/target/release/build/whisper-rs-sys-721d0888d793c39d/out/whisper.cpp/ggml-metal.m",
+  "file": "/Users/oliverhull/dev/memo-esp/target/release/build/whisper-rs-sys-721d0888d793c39d/out/whisper.cpp/ggml-metal.m",
+  "output": "CMakeFiles/whisper.dir/ggml-metal.m.o"
+},
+{
+  "directory": "/Users/oliverhull/dev/memo-esp/target/release/build/whisper-rs-sys-721d0888d793c39d/out/build",
+  "command": "/usr/bin/cc -DACCELERATE_LAPACK_ILP64 -DACCELERATE_NEW_LAPACK -DGGML_METAL_EMBED_LIBRARY -DGGML_METAL_NDEBUG -DGGML_USE_ACCELERATE -DGGML_USE_METAL -D_DARWIN_C_SOURCE -D_XOPEN_SOURCE=600 -I/Users/oliverhull/dev/memo-esp/target/release/build/whisper-rs-sys-721d0888d793c39d/out/whisper.cpp/. -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Accelerate.framework -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Foundation.framework -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Metal.framework -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/MetalKit.framework  -ffunction-sections -fdata-sections -fPIC --target=arm64-apple-macosx -mmacosx-version-min=26.1 -w -O3 -DNDEBUG -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -o CMakeFiles/whisper.dir/autogenerated/ggml-embed-metallib.s.o -c /Users/oliverhull/dev/memo-esp/target/release/build/whisper-rs-sys-721d0888d793c39d/out/build/autogenerated/ggml-embed-metallib.s",
+  "file": "/Users/oliverhull/dev/memo-esp/target/release/build/whisper-rs-sys-721d0888d793c39d/out/build/autogenerated/ggml-embed-metallib.s",
+  "output": "CMakeFiles/whisper.dir/autogenerated/ggml-embed-metallib.s.o"
+},
+{
+  "directory": "/Users/oliverhull/dev/memo-esp/target/release/build/whisper-rs-sys-721d0888d793c39d/out/build",
+  "command": "/usr/bin/c++ -DACCELERATE_LAPACK_ILP64 -DACCELERATE_NEW_LAPACK -DGGML_METAL_EMBED_LIBRARY -DGGML_METAL_NDEBUG -DGGML_USE_ACCELERATE -DGGML_USE_METAL -D_DARWIN_C_SOURCE -D_XOPEN_SOURCE=600 -I/Users/oliverhull/dev/memo-esp/target/release/build/whisper-rs-sys-721d0888d793c39d/out/whisper.cpp/. -F/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks  -ffunction-sections -fdata-sections -fPIC --target=arm64-apple-macosx -mmacosx-version-min=26.1 -w -O3 -DNDEBUG -std=gnu++11 -arch arm64 -o CMakeFiles/whisper.dir/whisper.cpp.o -c /Users/oliverhull/dev/memo-esp/target/release/build/whisper-rs-sys-721d0888d793c39d/out/whisper.cpp/whisper.cpp",
+  "file": "/Users/oliverhull/dev/memo-esp/target/release/build/whisper-rs-sys-721d0888d793c39d/out/whisper.cpp/whisper.cpp",
+  "output": "CMakeFiles/whisper.dir/whisper.cpp.o"
+}
+]

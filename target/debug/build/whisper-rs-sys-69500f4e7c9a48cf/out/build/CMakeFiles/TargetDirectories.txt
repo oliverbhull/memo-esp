@@ -1,0 +1,13 @@
+/Users/oliverhull/dev/memo-esp/target/debug/build/whisper-rs-sys-69500f4e7c9a48cf/out/build/CMakeFiles/whisper.dir
+/Users/oliverhull/dev/memo-esp/target/debug/build/whisper-rs-sys-69500f4e7c9a48cf/out/build/CMakeFiles/edit_cache.dir
+/Users/oliverhull/dev/memo-esp/target/debug/build/whisper-rs-sys-69500f4e7c9a48cf/out/build/CMakeFiles/rebuild_cache.dir
+/Users/oliverhull/dev/memo-esp/target/debug/build/whisper-rs-sys-69500f4e7c9a48cf/out/build/CMakeFiles/list_install_components.dir
+/Users/oliverhull/dev/memo-esp/target/debug/build/whisper-rs-sys-69500f4e7c9a48cf/out/build/CMakeFiles/install.dir
+/Users/oliverhull/dev/memo-esp/target/debug/build/whisper-rs-sys-69500f4e7c9a48cf/out/build/CMakeFiles/install/local.dir
+/Users/oliverhull/dev/memo-esp/target/debug/build/whisper-rs-sys-69500f4e7c9a48cf/out/build/CMakeFiles/install/strip.dir
+/Users/oliverhull/dev/memo-esp/target/debug/build/whisper-rs-sys-69500f4e7c9a48cf/out/build/bindings/CMakeFiles/edit_cache.dir
+/Users/oliverhull/dev/memo-esp/target/debug/build/whisper-rs-sys-69500f4e7c9a48cf/out/build/bindings/CMakeFiles/rebuild_cache.dir
+/Users/oliverhull/dev/memo-esp/target/debug/build/whisper-rs-sys-69500f4e7c9a48cf/out/build/bindings/CMakeFiles/list_install_components.dir
+/Users/oliverhull/dev/memo-esp/target/debug/build/whisper-rs-sys-69500f4e7c9a48cf/out/build/bindings/CMakeFiles/install.dir
+/Users/oliverhull/dev/memo-esp/target/debug/build/whisper-rs-sys-69500f4e7c9a48cf/out/build/bindings/CMakeFiles/install/local.dir
+/Users/oliverhull/dev/memo-esp/target/debug/build/whisper-rs-sys-69500f4e7c9a48cf/out/build/bindings/CMakeFiles/install/strip.dir

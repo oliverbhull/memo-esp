@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ESP32 Audio Transcription</title>
+    <title>memo</title>
     <style>
         * {
             margin: 0;
@@ -104,6 +104,8 @@
             gap: 15px;
             font-size: 13px;
             color: #666;
+            flex-wrap: wrap;
+            align-items: center;
         }
 
         .transcript-time {
@@ -113,6 +115,16 @@
 
         .transcript-duration {
             color: #8b5cf6;
+        }
+
+        .device-badge {
+            background: #e0e7ff;
+            color: #4f46e5;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            font-family: 'Monaco', 'Courier New', monospace;
         }
 
         .transcript-text {
@@ -145,26 +157,301 @@
             color: #666;
             font-size: 14px;
         }
+
+        .tabs-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .tabs-header {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+            overflow-x: auto;
+            scrollbar-width: thin;
+        }
+
+        .tab {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: #666;
+            white-space: nowrap;
+            transition: all 0.2s;
+            font-family: 'Monaco', 'Courier New', monospace;
+            position: relative;
+        }
+
+        .tab:hover {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .tab.active {
+            color: #3b82f6;
+            border-bottom-color: #3b82f6;
+            background: white;
+        }
+
+        .tab-count {
+            background: #e5e7eb;
+            color: #6b7280;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .tab.active .tab-count {
+            background: #dbeafe;
+            color: #3b82f6;
+        }
+
+        .tab-status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ef4444;
+        }
+
+        .tab-status-dot.connected {
+            background: #22c55e;
+            animation: pulse 2s infinite;
+        }
+
+        .tab-status-dot.disconnected {
+            background: #ef4444;
+        }
+
+        .tab-status-dot.recording {
+            background: #ef4444;
+            animation: pulse 2s infinite;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .device-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .record-button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .record-button.start {
+            background: #10b981;
+            color: white;
+        }
+
+        .record-button.start:hover {
+            background: #059669;
+        }
+
+        .record-button.stop {
+            background: #ef4444;
+            color: white;
+        }
+
+        .record-button.stop:hover {
+            background: #dc2626;
+        }
+
+        .record-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .device-status {
+            font-size: 13px;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .device-status.recording {
+            color: #ef4444;
+            font-weight: 600;
+        }
+
+        .audio-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #eee;
+        }
+
+        .play-button {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            background: #3b82f6;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .play-button:hover {
+            background: #2563eb;
+        }
+
+        .play-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .play-button.playing {
+            background: #ef4444;
+        }
+
+        .play-button.playing:hover {
+            background: #dc2626;
+        }
+
+        .audio-player {
+            display: none;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .audio-player.active {
+            display: block;
+        }
+
+        .audio-progress {
+            width: 100%;
+            height: 4px;
+            background: #e5e7eb;
+            border-radius: 2px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+
+        .audio-progress-bar {
+            height: 100%;
+            background: #3b82f6;
+            width: 0%;
+            transition: width 0.1s;
+        }
+
+        .quality-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .quality-badge.excellent {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .quality-badge.good {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .quality-badge.fair {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .quality-badge.poor {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .quality-details {
+            margin-top: 8px;
+            padding: 8px;
+            background: #f9fafb;
+            border-radius: 6px;
+            font-size: 12px;
+            color: #6b7280;
+            display: none;
+        }
+
+        .quality-details.visible {
+            display: block;
+        }
+
+        .quality-toggle {
+            cursor: pointer;
+            color: #6b7280;
+            font-size: 11px;
+            margin-top: 4px;
+            text-decoration: underline;
+        }
+
+        .quality-toggle:hover {
+            color: #3b82f6;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>ESP32 Audio Transcription</h1>
+            <h1>memo</h1>
             <div class="status">
                 <div class="status-indicator" id="statusIndicator"></div>
                 <span id="statusText">Connecting...</span>
             </div>
         </header>
 
-        <div class="controls">
-            <div class="controls-hint">Press SPACE on the server terminal to start/stop recording</div>
+        <div class="controls" id="deviceControls">
+            <!-- Device controls will be dynamically generated here -->
         </div>
 
-        <div class="transcripts" id="transcripts">
-            <div class="empty-state">
-                <div class="empty-state-icon">🎤</div>
-                <div>No transcripts yet. Start recording to see transcriptions appear here.</div>
+        <div class="tabs-container">
+            <div class="tabs-header" id="tabsHeader">
+                <!-- Tabs will be dynamically generated here -->
+            </div>
+            <div class="tab-content active" id="allTabContent">
+                <div class="transcripts" id="transcripts">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🎤</div>
+                        <div>No transcripts yet. Start recording to see transcriptions appear here.</div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -173,9 +460,16 @@
         const transcriptsContainer = document.getElementById('transcripts');
         const statusIndicator = document.getElementById('statusIndicator');
         const statusText = document.getElementById('statusText');
+        const tabsHeader = document.getElementById('tabsHeader');
+        const allTabContent = document.getElementById('allTabContent');
 
         let transcripts = [];
+        let devices = [];
+        let activeDevices = new Set();
+        let selectedDevice = 'all';
         let eventSource = null;
+        let deviceRecordingStatus = {};  // {device_id: true/false}
+        let currentlyPlayingAudio = null;  // Track currently playing audio element
 
         function formatTime(timestamp) {
             const date = new Date(timestamp);
@@ -197,43 +491,367 @@
 
         function addTranscript(data) {
             transcripts.unshift(data);
-            renderTranscripts();
+            updateActiveDevices();
+            // Use requestAnimationFrame for smooth updates
+            requestAnimationFrame(() => {
+                renderTabs();
+                renderTranscripts();
+            });
+        }
+
+        function updateActiveDevices() {
+            const deviceSet = new Set(transcripts.map(t => t.device_id));
+            activeDevices = deviceSet;
+        }
+
+        function getFilteredTranscripts() {
+            if (selectedDevice === 'all') {
+                return transcripts;
+            }
+            return transcripts.filter(t => t.device_id === selectedDevice);
+        }
+
+        function getDeviceCount(deviceId) {
+            if (deviceId === 'all') {
+                return transcripts.length;
+            }
+            return transcripts.filter(t => t.device_id === deviceId).length;
+        }
+
+        function renderTabs() {
+            // Get all devices that have transcripts
+            const devicesWithTranscripts = Array.from(activeDevices);
+            
+            // Get connected device IDs
+            const connectedDeviceIds = new Set(devices.map(d => d.device_id));
+            
+            // Separate devices into connected and disconnected, maintaining order
+            // First show connected devices (in the order they appear in devices array)
+            const connectedDevices = devices
+                .map(d => d.device_id)
+                .filter(id => devicesWithTranscripts.includes(id));
+            
+            // Then show disconnected devices (those with transcripts but not connected)
+            const disconnectedDevices = devicesWithTranscripts
+                .filter(id => !connectedDeviceIds.has(id))
+                .sort();
+            
+            // Combine: connected first, then disconnected
+            const orderedDevices = [...connectedDevices, ...disconnectedDevices];
+            
+            // Create "All" tab
+            const allTab = `
+                <button class="tab ${selectedDevice === 'all' ? 'active' : ''}" data-device="all">
+                    <span>📁</span>
+                    <span>All</span>
+                    <span class="tab-count">${getDeviceCount('all')}</span>
+                </button>
+            `;
+
+            // Create device tabs in order
+            const deviceTabs = orderedDevices.map(deviceId => {
+                const isConnected = connectedDeviceIds.has(deviceId);
+                const isRecording = deviceRecordingStatus[deviceId] || false;
+                let statusClass = isConnected ? 'connected' : 'disconnected';
+                if (isRecording) {
+                    statusClass = 'recording';
+                }
+                return `
+                    <button class="tab ${selectedDevice === deviceId ? 'active' : ''}" data-device="${deviceId}">
+                        <span class="tab-status-dot ${statusClass}"></span>
+                        <span>${deviceId}</span>
+                        <span class="tab-count">${getDeviceCount(deviceId)}</span>
+                        ${isRecording ? '<span style="margin-left: 4px;">🔴</span>' : ''}
+                    </button>
+                `;
+            }).join('');
+
+            tabsHeader.innerHTML = allTab + deviceTabs;
+
+            // Add click handlers
+            tabsHeader.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    selectedDevice = tab.dataset.device;
+                    renderTabs();
+                    renderTranscripts();
+                });
+            });
         }
 
         function renderTranscripts() {
-            if (transcripts.length === 0) {
+            const filtered = getFilteredTranscripts();
+
+            if (filtered.length === 0) {
                 transcriptsContainer.innerHTML = `
                     <div class="empty-state">
                         <div class="empty-state-icon">🎤</div>
-                        <div>No transcripts yet. Start recording to see transcriptions appear here.</div>
+                        <div>${selectedDevice === 'all' 
+                            ? 'No transcripts yet. Start recording to see transcriptions appear here.'
+                            : `No transcripts for ${selectedDevice} yet.`}</div>
                     </div>
                 `;
                 return;
             }
 
-            transcriptsContainer.innerHTML = transcripts.map(t => `
-                <div class="transcript-card">
+            transcriptsContainer.innerHTML = filtered.map((t, index) => {
+                const audioPath = t.audio_file || '';
+                const audioUrl = audioPath ? `/audio-file?path=${encodeURIComponent(audioPath)}` : '';
+                const hasAudio = !!audioPath;
+                
+                // Quality metrics - safely handle null/undefined values
+                const quality = t.audio_quality || {};
+                const qualityScore = (t.quality_score !== undefined && t.quality_score !== null && !isNaN(t.quality_score)) 
+                    ? Number(t.quality_score) 
+                    : null;
+                const qualityClass = (qualityScore !== null && !isNaN(qualityScore)) ? 
+                    (qualityScore >= 80 ? 'excellent' : 
+                     qualityScore >= 60 ? 'good' : 
+                     qualityScore >= 40 ? 'fair' : 'poor') : '';
+                const qualityLabel = (qualityScore !== null && !isNaN(qualityScore)) ? 
+                    (qualityScore >= 80 ? 'Excellent' : 
+                     qualityScore >= 60 ? 'Good' : 
+                     qualityScore >= 40 ? 'Fair' : 'Poor') : '';
+                
+                // Build quality details string
+                let qualityDetails = '';
+                let hasAnyMetrics = false;
+                
+                // Helper function to safely format numbers
+                const safeFormat = (value, decimals = 1) => {
+                    if (value === null || value === undefined || isNaN(value)) {
+                        return 'N/A';
+                    }
+                    return Number(value).toFixed(decimals);
+                };
+                
+                if (quality.avg_db !== null && quality.avg_db !== undefined && !isNaN(quality.avg_db)) {
+                    qualityDetails += `Avg Level: ${safeFormat(quality.avg_db)} dB<br>`;
+                    hasAnyMetrics = true;
+                }
+                if (quality.max_db !== null && quality.max_db !== undefined && !isNaN(quality.max_db)) {
+                    qualityDetails += `Max Level: ${safeFormat(quality.max_db)} dB<br>`;
+                    hasAnyMetrics = true;
+                }
+                if (quality.min_db !== null && quality.min_db !== undefined && !isNaN(quality.min_db)) {
+                    qualityDetails += `Min Level: ${safeFormat(quality.min_db)} dB<br>`;
+                    hasAnyMetrics = true;
+                }
+                if (quality.clip_count !== null && quality.clip_count !== undefined) {
+                    qualityDetails += `Clipping: ${quality.clip_count} events<br>`;
+                    hasAnyMetrics = true;
+                }
+                if (quality.silence_chunks !== null && quality.silence_chunks !== undefined && 
+                    quality.total_chunks !== null && quality.total_chunks !== undefined && 
+                    quality.total_chunks > 0) {
+                    const silencePct = (quality.silence_chunks / quality.total_chunks * 100);
+                    qualityDetails += `Silence: ${safeFormat(silencePct)}% (${quality.silence_chunks}/${quality.total_chunks} chunks)<br>`;
+                    hasAnyMetrics = true;
+                }
+                if (quality.i2s_errors !== null && quality.i2s_errors !== undefined) {
+                    qualityDetails += `I2S Errors: ${quality.i2s_errors}<br>`;
+                    hasAnyMetrics = true;
+                }
+                if (quality.total_chunks !== null && quality.total_chunks !== undefined) {
+                    qualityDetails += `Total Chunks: ${quality.total_chunks}<br>`;
+                    hasAnyMetrics = true;
+                }
+                
+                // Add server-side analysis if available
+                if (quality.server_analysis) {
+                    const analysis = quality.server_analysis;
+                    qualityDetails += `<br><strong>Server Analysis:</strong><br>`;
+                    if (analysis.db_level !== null && analysis.db_level !== undefined) {
+                        qualityDetails += `Server dB: ${safeFormat(analysis.db_level)} dB<br>`;
+                    }
+                    if (analysis.dc_offset !== null && analysis.dc_offset !== undefined) {
+                        const dcOffset = Math.abs(analysis.dc_offset);
+                        const dcColor = dcOffset > 100 ? '#ef4444' : dcOffset > 50 ? '#f59e0b' : '#10b981';
+                        const dcStatus = analysis.dc_offset_removed ? ' (removed)' : '';
+                        qualityDetails += `DC Offset: <span style="color: ${dcColor}">${safeFormat(analysis.dc_offset)}</span>${dcStatus}<br>`;
+                    }
+                    if (analysis.sample_range !== null && analysis.sample_range !== undefined) {
+                        const rangeColor = analysis.sample_range < 100 ? '#ef4444' : analysis.sample_range < 500 ? '#f59e0b' : '#10b981';
+                        qualityDetails += `Sample Range: <span style="color: ${rangeColor}">${analysis.sample_range}</span><br>`;
+                    }
+                    if (analysis.zero_percentage !== null && analysis.zero_percentage !== undefined) {
+                        qualityDetails += `Zero samples: ${safeFormat(analysis.zero_percentage)}%<br>`;
+                    }
+                    if (analysis.clip_percentage !== null && analysis.clip_percentage !== undefined) {
+                        qualityDetails += `Server clipping: ${safeFormat(analysis.clip_percentage)}%<br>`;
+                    }
+                    if (analysis.data_integrity) {
+                        const integrityColor = analysis.data_integrity === 'good' ? '#10b981' : '#ef4444';
+                        qualityDetails += `Data integrity: <span style="color: ${integrityColor}">${analysis.data_integrity}</span><br>`;
+                    }
+                    if (analysis.issues && analysis.issues.length > 0) {
+                        qualityDetails += `⚠️ Issues: ${analysis.issues.join(', ')}<br>`;
+                    }
+                    hasAnyMetrics = true;
+                }
+                
+                // If no metrics available, show a message
+                if (!hasAnyMetrics && (qualityScore === null || qualityScore === undefined)) {
+                    qualityDetails = '<em style="color: #999;">Quality metrics not available. Recordings made before firmware update may not have metrics.</em>';
+                }
+                
+                return `
+                <div class="transcript-card" data-transcript-id="${index}">
                     <div class="transcript-header">
                         <div class="transcript-meta">
+                            <span class="device-badge">${t.device_id}</span>
                             <span class="transcript-time">${formatTime(t.timestamp)}</span>
                             <span>${formatDate(t.timestamp)}</span>
-                            <span class="transcript-duration">${t.duration_sec.toFixed(1)}s</span>
-                            <span>${t.device_id}</span>
+                            ${t.duration ? `<span class="transcript-duration">${t.duration.toFixed(1)}s</span>` : ''}
+                            ${qualityScore !== null ? `<span class="quality-badge ${qualityClass}">${qualityLabel} (${qualityScore.toFixed(0)})</span>` : ''}
                         </div>
                     </div>
                     <div class="transcript-text">${t.transcript}</div>
+                    ${qualityDetails ? `
+                    <div class="quality-toggle" onclick="toggleQualityDetails(${index})">Show quality details</div>
+                    <div class="quality-details" id="quality-${index}">${qualityDetails}</div>
+                    ` : ''}
+                    ${hasAudio ? `
+                    <div class="audio-controls">
+                        <button class="play-button" data-audio-url="${audioUrl}" data-transcript-id="${index}">
+                            <span class="play-icon">▶</span>
+                            <span class="play-text">Play</span>
+                        </button>
+                        <audio class="audio-player" data-transcript-id="${index}" preload="none" src="${audioUrl}">
+                        </audio>
+                        <div class="audio-progress" data-transcript-id="${index}">
+                            <div class="audio-progress-bar" data-transcript-id="${index}"></div>
+                        </div>
+                    </div>
+                    ` : ''}
                 </div>
-            `).join('');
+            `;
+            }).join('');
+            
+            // Attach event listeners to play buttons
+            attachAudioListeners();
         }
 
         function updateStatus(recording) {
-            if (recording) {
+            // Check if any device is recording
+            const anyRecording = Object.values(deviceRecordingStatus).some(r => r);
+            if (anyRecording) {
                 statusIndicator.className = 'status-indicator recording';
-                statusText.textContent = 'Recording...';
+                const recordingDevices = Object.entries(deviceRecordingStatus)
+                    .filter(([_, r]) => r)
+                    .map(([id, _]) => id);
+                statusText.textContent = `Recording: ${recordingDevices.join(', ')}`;
             } else {
                 statusIndicator.className = 'status-indicator idle';
                 statusText.textContent = 'Ready';
             }
+        }
+
+        function renderDeviceControls() {
+            const controlsContainer = document.getElementById('deviceControls');
+            if (!controlsContainer) return;
+            
+            if (!devices || devices.length === 0) {
+                controlsContainer.innerHTML = '<div class="controls-hint">No devices connected. Waiting for devices...</div>';
+                return;
+            }
+
+            const controlsHTML = devices.map(device => {
+                if (!device || !device.device_id) return '';
+                const isRecording = deviceRecordingStatus[device.device_id] || false;
+                const deviceIdEscaped = device.device_id.replace(/'/g, "\\'");
+                return `
+                    <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <div style="font-weight: 600; margin-bottom: 5px; font-family: 'Monaco', 'Courier New', monospace;">${device.device_id}</div>
+                                <div class="device-status ${isRecording ? 'recording' : ''}">
+                                    <span class="tab-status-dot ${isRecording ? 'recording' : 'connected'}"></span>
+                                    <span>${isRecording ? 'Recording...' : 'Ready'}</span>
+                                </div>
+                            </div>
+                            <button 
+                                class="record-button ${isRecording ? 'stop' : 'start'}" 
+                                data-device="${device.device_id}"
+                                onclick="toggleRecording('${deviceIdEscaped}')"
+                            >
+                                ${isRecording ? 'Stop' : 'Listen'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).filter(html => html).join('');
+
+            controlsContainer.innerHTML = controlsHTML || '<div class="controls-hint">No devices connected. Waiting for devices...</div>';
+        }
+
+        async function toggleRecording(deviceId) {
+            const isRecording = deviceRecordingStatus[deviceId] || false;
+            const endpoint = isRecording ? '/record/stop' : '/record/start';
+            
+            try {
+                const response = await fetch(`${endpoint}?device=${encodeURIComponent(deviceId)}`, {
+                    method: 'POST'
+                });
+                if (response.ok) {
+                    // Status will be updated via SSE event
+                } else {
+                    console.error('Failed to toggle recording:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error toggling recording:', error);
+            }
+        }
+
+        function loadDevices() {
+            fetch('/devices')
+                .then(r => r.json())
+                .then(devicesData => {
+                    devices = devicesData;
+                    updateActiveDevices();
+                    // Use requestAnimationFrame for smooth updates
+                    requestAnimationFrame(() => {
+                        renderTabs();
+                        renderDeviceControls();
+                    });
+                })
+                .catch(err => console.error('Load devices error:', err));
+        }
+
+        function loadRecordingStatus() {
+            // Try /recording-status first, fallback to /status
+            fetch('/recording-status')
+                .then(r => {
+                    if (!r.ok) {
+                        // Fallback to /status endpoint
+                        return fetch('/status').then(r2 => {
+                            if (!r2.ok) throw new Error(`HTTP ${r2.status}`);
+                            return r2.json();
+                        });
+                    }
+                    return r.json();
+                })
+                .then(data => {
+                    // Handle both response formats
+                    if (data.devices) {
+                        deviceRecordingStatus = data.devices;
+                    } else if (typeof data === 'object') {
+                        deviceRecordingStatus = data;
+                    } else {
+                        deviceRecordingStatus = {};
+                    }
+                    updateStatus();
+                    // Use requestAnimationFrame for smooth updates
+                    requestAnimationFrame(() => {
+                        renderTabs();
+                        renderDeviceControls();
+                    });
+                })
+                .catch(err => {
+                    console.error('Load recording status error:', err);
+                    // Initialize empty status if endpoint fails
+                    deviceRecordingStatus = {};
+                    updateStatus();
+                });
         }
 
         function connectSSE() {
@@ -246,7 +864,27 @@
 
             eventSource.addEventListener('status', (e) => {
                 const data = JSON.parse(e.data);
-                updateStatus(data.recording);
+                if (data.devices) {
+                    // Update per-device recording status
+                    deviceRecordingStatus = data.devices;
+                    updateStatus();
+                    // Use requestAnimationFrame for smooth updates
+                    requestAnimationFrame(() => {
+                        renderTabs();
+                        renderDeviceControls();
+                    });
+                }
+            });
+
+            eventSource.addEventListener('device_status', (e) => {
+                const data = JSON.parse(e.data);
+                deviceRecordingStatus[data.device_id] = data.recording;
+                updateStatus();
+                // Use requestAnimationFrame for smooth updates
+                requestAnimationFrame(() => {
+                    renderTabs();
+                    renderDeviceControls();
+                });
             });
 
             eventSource.onopen = () => {
@@ -266,29 +904,211 @@
 
         // Poll status periodically
         function pollStatus() {
-            fetch('/status')
-                .then(r => r.json())
-                .then(data => {
-                    updateStatus(data.recording);
-                })
-                .catch(err => console.error('Status poll error:', err));
+            loadRecordingStatus();
+        }
+
+        // Make toggleQualityDetails globally accessible
+        window.toggleQualityDetails = function(index) {
+            const details = document.getElementById(`quality-${index}`);
+            if (!details) return;
+            const toggle = details.previousElementSibling;
+            if (details.classList.contains('visible')) {
+                details.classList.remove('visible');
+                if (toggle) toggle.textContent = 'Show quality details';
+            } else {
+                details.classList.add('visible');
+                if (toggle) toggle.textContent = 'Hide quality details';
+            }
+        };
+
+        function attachAudioListeners() {
+            // Remove old listeners by cloning and replacing
+            const playButtons = document.querySelectorAll('.play-button');
+            playButtons.forEach(button => {
+                // Remove existing listeners by replacing with new element
+                const newButton = button.cloneNode(true);
+                button.parentNode.replaceChild(newButton, button);
+                
+                newButton.addEventListener('click', function() {
+                    const audioUrl = this.dataset.audioUrl;
+                    const transcriptId = this.dataset.transcriptId;
+                    const audioElement = document.querySelector(`audio[data-transcript-id="${transcriptId}"]`);
+                    const playIcon = this.querySelector('.play-icon');
+                    const playText = this.querySelector('.play-text');
+                    
+                    if (!audioElement) return;
+                    
+                    // Stop any currently playing audio
+                    if (currentlyPlayingAudio && currentlyPlayingAudio !== audioElement) {
+                        currentlyPlayingAudio.pause();
+                        currentlyPlayingAudio.currentTime = 0;
+                        const otherButton = document.querySelector(`.play-button[data-transcript-id="${currentlyPlayingAudio.dataset.transcriptId}"]`);
+                        if (otherButton) {
+                            otherButton.classList.remove('playing');
+                            otherButton.querySelector('.play-icon').textContent = '▶';
+                            otherButton.querySelector('.play-text').textContent = 'Play';
+                        }
+                    }
+                    
+                    if (audioElement.paused) {
+                        // Play audio
+                        audioElement.play();
+                        this.classList.add('playing');
+                        playIcon.textContent = '⏸';
+                        playText.textContent = 'Pause';
+                        currentlyPlayingAudio = audioElement;
+                        
+                        // Show progress bar
+                        const progressContainer = document.querySelector(`.audio-progress[data-transcript-id="${transcriptId}"]`);
+                        if (progressContainer) {
+                            progressContainer.style.display = 'block';
+                        }
+                    } else {
+                        // Pause audio
+                        audioElement.pause();
+                        this.classList.remove('playing');
+                        playIcon.textContent = '▶';
+                        playText.textContent = 'Play';
+                        currentlyPlayingAudio = null;
+                    }
+                });
+            });
+            
+            // Add progress update listeners
+            const audioElements = document.querySelectorAll('audio');
+            audioElements.forEach(audio => {
+                // Remove old listeners
+                const newAudio = audio.cloneNode(true);
+                audio.parentNode.replaceChild(newAudio, audio);
+                
+                newAudio.addEventListener('timeupdate', function() {
+                    const transcriptId = this.dataset.transcriptId;
+                    const progressBar = document.querySelector(`.audio-progress-bar[data-transcript-id="${transcriptId}"]`);
+                    if (progressBar && this.duration) {
+                        const percent = (this.currentTime / this.duration) * 100;
+                        progressBar.style.width = percent + '%';
+                    }
+                });
+                
+                newAudio.addEventListener('ended', function() {
+                    const transcriptId = this.dataset.transcriptId;
+                    const button = document.querySelector(`.play-button[data-transcript-id="${transcriptId}"]`);
+                    if (button) {
+                        button.classList.remove('playing');
+                        button.querySelector('.play-icon').textContent = '▶';
+                        button.querySelector('.play-text').textContent = 'Play';
+                    }
+                    const progressBar = document.querySelector(`.audio-progress-bar[data-transcript-id="${transcriptId}"]`);
+                    if (progressBar) {
+                        progressBar.style.width = '0%';
+                    }
+                    currentlyPlayingAudio = null;
+                });
+                
+                newAudio.addEventListener('error', function() {
+                    const transcriptId = this.dataset.transcriptId;
+                    const button = document.querySelector(`.play-button[data-transcript-id="${transcriptId}"]`);
+                    const audioUrl = this.src || this.currentSrc || button?.dataset.audioUrl;
+                    
+                    if (button) {
+                        button.disabled = true;
+                        button.querySelector('.play-text').textContent = 'Error';
+                    }
+                    
+                    // Log detailed error information
+                    let errorMsg = `Audio playback error for transcript ${transcriptId}`;
+                    if (this.error) {
+                        errorMsg += `: Code ${this.error.code}`;
+                        switch(this.error.code) {
+                            case 1: errorMsg += ' (MEDIA_ERR_ABORTED)'; break;
+                            case 2: errorMsg += ' (MEDIA_ERR_NETWORK)'; break;
+                            case 3: errorMsg += ' (MEDIA_ERR_DECODE)'; break;
+                            case 4: errorMsg += ' (MEDIA_ERR_SRC_NOT_SUPPORTED)'; break;
+                        }
+                    }
+                    if (audioUrl) {
+                        errorMsg += ` - URL: ${audioUrl}`;
+                    }
+                    console.error(errorMsg);
+                });
+            });
         }
 
         // Load existing transcripts
         function loadTranscripts() {
+            console.log('Loading transcripts...');
             fetch('/transcripts')
-                .then(r => r.json())
-                .then(data => {
-                    transcripts = data;
-                    renderTranscripts();
+                .then(r => {
+                    console.log('Transcripts response:', r.status);
+                    if (!r.ok) {
+                        throw new Error(`HTTP ${r.status}: ${r.statusText}`);
+                    }
+                    // Get response as text first to debug parsing issues
+                    return r.text();
                 })
-                .catch(err => console.error('Load transcripts error:', err));
+                .then(text => {
+                    try {
+                        const data = JSON.parse(text);
+                        console.log('Transcripts loaded:', data.length, 'items');
+                        transcripts = data;
+                        updateActiveDevices();
+                        // Use requestAnimationFrame for smooth updates
+                        requestAnimationFrame(() => {
+                            renderTabs();
+                            renderTranscripts();
+                        });
+                    } catch (parseError) {
+                        console.error('JSON parse error:', parseError);
+                        console.error('Response text (first 500 chars):', text.substring(0, 500));
+                        throw new Error(`Failed to parse JSON: ${parseError.message}`);
+                    }
+                })
+                .catch(err => {
+                    console.error('Load transcripts error:', err);
+                    // Show user-friendly error message
+                    transcriptsContainer.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">⚠️</div>
+                            <div>Failed to load transcripts: ${err.message}</div>
+                            <div style="margin-top: 10px; font-size: 12px; color: #999;">
+                                Check server console for details
+                            </div>
+                        </div>
+                    `;
+                });
         }
+
+        // Debounce function for optimizing updates
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Optimized render functions with debouncing
+        const debouncedRenderTabs = debounce(() => {
+            renderTabs();
+        }, 100);
+
+        const debouncedRenderTranscripts = debounce(() => {
+            renderTranscripts();
+        }, 100);
 
         // Initialize
         connectSSE();
         loadTranscripts();
-        setInterval(pollStatus, 2000);
+        loadDevices();
+        loadRecordingStatus();
+        
+        // Reduce polling frequency - SSE handles most updates
+        setInterval(pollStatus, 5000);  // Poll status every 5 seconds (SSE handles real-time)
+        setInterval(loadDevices, 5000);  // Poll devices every 5 seconds
     </script>
 </body>
 </html>

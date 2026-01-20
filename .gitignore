@@ -18,6 +18,7 @@ Thumbs.db
 
 # Audio data
 received_audio/
+transcripts/*
 *.pcm
 *.wav
 
